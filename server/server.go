@@ -1,12 +1,20 @@
 package server
 
 import (
-	"fmt"
+	"encoding/json"
 	"go-line-bot/lineBotSetting"
+	"io/ioutil"
+	"os"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/line/line-bot-sdk-go/linebot"
 )
+
+type foodList struct {
+	id   int
+	name string
+}
 
 func Callback(ctx *gin.Context) {
 
@@ -25,8 +33,30 @@ func Callback(ctx *gin.Context) {
 		if event.Type == linebot.EventTypeMessage {
 			switch msg := event.Message.(type) {
 			case *linebot.TextMessage:
-				bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("echo :"+msg.Text)).Do()
-				fmt.Println(msg.Text)
+				switch msg.Text {
+				case "測試":
+					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("目前連線正常")).Do()
+				case "清單":
+					list := &[]foodList{}
+					jsonfile, _ := os.Open("../list.json")
+					defer jsonfile.Close()
+
+					bytesValue, _ := ioutil.ReadAll(jsonfile)
+					json.Unmarshal(bytesValue, list)
+
+					str := "清單:%0D%0A"
+
+					for _, v := range *list {
+						str += strconv.Itoa(v.id) + ". " + v.name + "%0D%0A"
+					}
+
+					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(str)).Do()
+				case "吃什麼":
+
+				case "新增":
+				case "刪除":
+
+				}
 			}
 		}
 	}
