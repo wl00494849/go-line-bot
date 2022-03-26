@@ -42,8 +42,8 @@ func Callback(ctx *gin.Context) {
 					eatWhat(event, bot)
 				case "刪除":
 				default:
-					if msg.Text[:7] == "新增：" {
-						additem(event, bot, msg.Text[7:])
+					if msg.Text[:9] == "新增：" {
+						additem(event, bot, msg.Text[9:])
 					}
 				}
 			}
