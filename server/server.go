@@ -37,34 +37,14 @@ func Callback(ctx *gin.Context) {
 				case "測試":
 					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("目前連線正常")).Do()
 				case "清單":
-					list := &[]foodList{}
-					jsonfile, _ := os.Open("list.json")
-					defer jsonfile.Close()
-
-					bytesValue, _ := ioutil.ReadAll(jsonfile)
-					json.Unmarshal(bytesValue, list)
-
-					str := "清單: \n"
-
-					for index, v := range *list {
-						str += strconv.Itoa(index) + ". " + v.Name + "\n"
-					}
-
-					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(str)).Do()
+					getList(event, bot)
 				case "吃什麼":
-					list := []foodList{}
-					jsonfile, _ := os.Open("list.json")
-					defer jsonfile.Close()
-
-					bytesValue, _ := ioutil.ReadAll(jsonfile)
-					json.Unmarshal(bytesValue, &list)
-
-					i := rand.Intn(len(list))
-
-					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(list[i].Name)).Do()
-				case "新增梗圖":
-				case "刪除梗圖":
-
+					eatWhat(event, bot)
+				case "刪除":
+				default:
+					if msg.Text[:3] == "新增:" {
+						additem(event, bot, msg.Text[3:])
+					}
 				}
 			}
 		}
@@ -85,4 +65,48 @@ func JsonFileTest(ctx *gin.Context) {
 	json.Unmarshal(bytesValue, &list)
 
 	ctx.JSON(200, list)
+}
+
+func getList(event *linebot.Event, bot *linebot.Client) {
+	list := &[]foodList{}
+	jsonfile, _ := os.Open("list.json")
+	defer jsonfile.Close()
+
+	bytesValue, _ := ioutil.ReadAll(jsonfile)
+	json.Unmarshal(bytesValue, list)
+
+	str := "清單: \n"
+
+	for index, v := range *list {
+		str += strconv.Itoa(index+1) + ". " + v.Name + "\n"
+	}
+
+	bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(str)).Do()
+}
+
+func eatWhat(event *linebot.Event, bot *linebot.Client) {
+	list := []foodList{}
+	jsonfile, _ := os.Open("list.json")
+	defer jsonfile.Close()
+
+	bytesValue, _ := ioutil.ReadAll(jsonfile)
+	json.Unmarshal(bytesValue, &list)
+
+	i := rand.Intn(len(list))
+
+	bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(list[i].Name)).Do()
+}
+
+func additem(event *linebot.Event, bot *linebot.Client, item string) {
+	list := []foodList{}
+	jsonfile, _ := os.Open("list.json")
+	defer jsonfile.Close()
+
+	bytesValue, _ := ioutil.ReadAll(jsonfile)
+	json.Unmarshal(bytesValue, &list)
+	list = append(list, foodList{Name: item})
+	deCode, _ := json.Marshal(&list)
+	jsonfile.Write(deCode)
+
+	bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("success")).Do()
 }
