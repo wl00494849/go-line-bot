@@ -44,10 +44,10 @@ func Callback(ctx *gin.Context) {
 					bytesValue, _ := ioutil.ReadAll(jsonfile)
 					json.Unmarshal(bytesValue, list)
 
-					str := "清單: %0D%0A"
+					str := "清單: \n"
 
 					for _, v := range *list {
-						str += strconv.Itoa(v.Id) + ". " + v.Name + "%0D%0A"
+						str += strconv.Itoa(v.Id) + ". " + v.Name + "\n"
 					}
 
 					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(str)).Do()
