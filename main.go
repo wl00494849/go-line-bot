@@ -15,7 +15,7 @@ func main() {
 	flag.StringVar(&port, "p", ":6666", "port")
 
 	if p := os.Getenv("PORT"); len(p) > 0 {
-		port = p
+		port = ":" + p
 	}
 
 	lineBotSetting.CreateBot()
