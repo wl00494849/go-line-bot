@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"go-line-bot/lineBotSetting"
 	"io/ioutil"
+	"math/rand"
 	"os"
 	"strconv"
 
@@ -12,7 +13,6 @@ import (
 )
 
 type foodList struct {
-	Id   int
 	Name string
 }
 
@@ -46,12 +46,22 @@ func Callback(ctx *gin.Context) {
 
 					str := "清單: \n"
 
-					for _, v := range *list {
-						str += strconv.Itoa(v.Id) + ". " + v.Name + "\n"
+					for index, v := range *list {
+						str += strconv.Itoa(index) + ". " + v.Name + "\n"
 					}
 
 					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(str)).Do()
+				case "吃什麼":
+					list := []foodList{}
+					jsonfile, _ := os.Open("list.json")
+					defer jsonfile.Close()
 
+					bytesValue, _ := ioutil.ReadAll(jsonfile)
+					json.Unmarshal(bytesValue, list)
+
+					i := rand.Intn(len(list))
+
+					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(list[i].Name)).Do()
 				case "新增梗圖":
 				case "刪除梗圖":
 
