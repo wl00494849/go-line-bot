@@ -2,7 +2,6 @@ package main
 
 import (
 	"flag"
-	"go-line-bot/lineBotSetting"
 	"go-line-bot/server"
 	"os"
 
@@ -17,8 +16,6 @@ func main() {
 	if p := os.Getenv("PORT"); len(p) > 0 {
 		port = ":" + p
 	}
-
-	lineBotSetting.CreateBot()
 
 	app := gin.Default()
 
