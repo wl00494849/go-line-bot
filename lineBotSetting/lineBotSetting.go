@@ -9,7 +9,7 @@ import (
 
 var bot *linebot.Client
 
-func CreateBot(sectet string, token string) {
+func CreateBot() {
 
 	godotenv.Load()
 
