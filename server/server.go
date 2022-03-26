@@ -1,6 +1,7 @@
 package server
 
 import (
+	"fmt"
 	"go-line-bot/lineBotSetting"
 
 	"github.com/gin-gonic/gin"
@@ -24,6 +25,7 @@ func Callback(ctx *gin.Context) {
 		if event.Type == linebot.EventTypeMessage {
 			switch msg := event.Message.(type) {
 			case *linebot.TextMessage:
+				fmt.Println(msg.Text)
 				bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("echo :"+msg.Text))
 			}
 		}
