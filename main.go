@@ -4,6 +4,7 @@ import (
 	"flag"
 	"go-line-bot/lineBotSetting"
 	"go-line-bot/server"
+	"os"
 
 	"github.com/gin-gonic/gin"
 )
@@ -11,7 +12,7 @@ import (
 func main() {
 
 	var port string
-	flag.StringVar(&port, "p", ":6666", "port")
+	flag.StringVar(&port, "p", os.Getenv("Port"), "port")
 
 	lineBotSetting.CreateBot()
 
