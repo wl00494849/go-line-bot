@@ -57,7 +57,7 @@ func Callback(ctx *gin.Context) {
 					defer jsonfile.Close()
 
 					bytesValue, _ := ioutil.ReadAll(jsonfile)
-					json.Unmarshal(bytesValue, list)
+					json.Unmarshal(bytesValue, &list)
 
 					i := rand.Intn(len(list))
 
