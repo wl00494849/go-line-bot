@@ -42,7 +42,7 @@ func Callback(ctx *gin.Context) {
 					eatWhat(event, bot)
 				case "刪除":
 				default:
-					if msg.Text[:7] == "新增:" {
+					if msg.Text[:7] == "新增：" {
 						additem(event, bot, msg.Text[7:])
 					}
 				}
@@ -105,8 +105,8 @@ func additem(event *linebot.Event, bot *linebot.Client, item string) {
 	bytesValue, _ := ioutil.ReadAll(jsonfile)
 	json.Unmarshal(bytesValue, &list)
 	list = append(list, foodList{Name: item})
-	deCode, _ := json.Marshal(&list)
-	jsonfile.Write(deCode)
+	encoder := json.NewEncoder(jsonfile)
+	encoder.Encode(list)
 
 	bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("success")).Do()
 }
