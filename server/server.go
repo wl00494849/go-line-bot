@@ -12,8 +12,8 @@ import (
 )
 
 type foodList struct {
-	id   int
-	name string
+	Id   int
+	Name string
 }
 
 func Callback(ctx *gin.Context) {
@@ -38,26 +38,41 @@ func Callback(ctx *gin.Context) {
 					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("目前連線正常")).Do()
 				case "清單":
 					list := &[]foodList{}
-					jsonfile, _ := os.Open("../list.json")
+					jsonfile, _ := os.Open("list.json")
 					defer jsonfile.Close()
 
 					bytesValue, _ := ioutil.ReadAll(jsonfile)
 					json.Unmarshal(bytesValue, list)
 
-					str := "清單:%0D%0A"
+					str := "清單: %0D%0A"
 
 					for _, v := range *list {
-						str += strconv.Itoa(v.id) + ". " + v.name + "%0D%0A"
+						str += strconv.Itoa(v.Id) + ". " + v.Name + "%0D%0A"
 					}
 
 					bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage(str)).Do()
-				case "吃什麼":
 
-				case "新增":
-				case "刪除":
+				case "新增梗圖":
+				case "刪除梗圖":
 
 				}
 			}
 		}
 	}
+}
+
+func JsonFileTest(ctx *gin.Context) {
+	list := &[]foodList{}
+	jsonfile, err := os.Open("list.json")
+
+	if err != nil {
+		panic(err)
+	}
+
+	defer jsonfile.Close()
+
+	bytesValue, _ := ioutil.ReadAll(jsonfile)
+	json.Unmarshal(bytesValue, &list)
+
+	ctx.JSON(200, list)
 }

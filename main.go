@@ -20,6 +20,7 @@ func main() {
 	app := gin.Default()
 
 	app.POST("/callback", server.Callback)
+	app.GET("/jsontest", server.JsonFileTest)
 	app.GET("/test", func(ctx *gin.Context) {
 		ctx.JSON(200, map[string]string{"test": "success"})
 	})
