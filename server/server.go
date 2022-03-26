@@ -25,8 +25,8 @@ func Callback(ctx *gin.Context) {
 		if event.Type == linebot.EventTypeMessage {
 			switch msg := event.Message.(type) {
 			case *linebot.TextMessage:
+				bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("echo :"+msg.Text)).Do()
 				fmt.Println(msg.Text)
-				bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("echo :"+msg.Text))
 			}
 		}
 	}
