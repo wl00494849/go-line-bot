@@ -105,8 +105,9 @@ func additem(event *linebot.Event, bot *linebot.Client, item string) {
 	bytesValue, _ := ioutil.ReadAll(jsonfile)
 	json.Unmarshal(bytesValue, &list)
 	list = append(list, foodList{Name: item})
-	encoder := json.NewEncoder(jsonfile)
-	encoder.Encode(list)
+
+	data, _ := json.Marshal(list)
+	ioutil.WriteFile("list.json", data, 0644)
 
 	bot.ReplyMessage(event.ReplyToken, linebot.NewTextMessage("success")).Do()
 }
