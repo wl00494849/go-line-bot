@@ -12,7 +12,11 @@ import (
 func main() {
 
 	var port string
-	flag.StringVar(&port, "p", os.Getenv("Port"), "port")
+	flag.StringVar(&port, "p", ":6666", "port")
+
+	if len(os.Getenv("Port")) > 0 {
+		port = os.Getenv("Port")
+	}
 
 	lineBotSetting.CreateBot()
 
